@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Java for DSA — Complete Reference</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #fbf6ec;
+    --surface: #ffffff;
+    --ink: #1f1a14;
+    --border: #e3d8c2;
+    --accent: #b8472e;
+    --accent2: #2f6f4f;
+    --accent3: #2563a8;
+    --gold: #c9952c;
+    --muted: #857a64;
+    --code-bg: #211c16;
+    --code-text: #e8e0d2;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Fraunces', serif;
+    line-height: 1.6;
+  }
+
+  /* HERO */
+  .hero {
+    background: var(--ink);
+    color: var(--bg);
+    padding: 56px 40px 46px;
+    position: relative;
+    overflow: hidden;
+    border-bottom: 6px solid var(--accent);
+  }
+  .hero::before {
+    content: '{ }';
+    position: absolute;
+    top: 10px; right: 40px;
+    font-family: 'Space Mono', monospace;
+    font-size: 140px;
+    color: rgba(255,255,255,0.04);
+    font-weight: 700;
+    pointer-events: none;
+  }
+  .hero-tag {
+    display: inline-block;
+    font-family: 'Space Mono', monospace;
+    background: var(--accent);
+    color: var(--bg);
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    margin-bottom: 18px;
+  }
+  .hero h1 {
+    font-size: clamp(2.2rem, 5vw, 3.8rem);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -1px;
+    margin-bottom: 14px;
+    font-optical-sizing: auto;
+  }
+  .hero h1 em { color: var(--gold); font-style: italic; }
+  .hero p { color: #d6cdbb; max-width: 600px; font-family: 'Space Mono', monospace; font-size: 13px; line-height: 1.8; }
+
+  /* LAYOUT */
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+  /* NAV TABS */
+  .tab-nav {
+    display: flex; gap: 0;
+    background: var(--surface);
+    border-bottom: 2px solid var(--ink);
+    position: sticky; top: 0; z-index: 100;
+    overflow-x: auto;
+  }
+  .tab-btn {
+    background: none; border: none; cursor: pointer;
+    color: var(--muted); font-family: 'Space Mono', monospace;
+    font-size: 12px; padding: 16px 22px; white-space: nowrap;
+    border-bottom: 3px solid transparent; transition: all 0.2s;
+    letter-spacing: 1px; text-transform: uppercase;
+  }
+  .tab-btn:hover { color: var(--ink); background: rgba(184,71,46,0.04); }
+  .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 700; }
+
+  /* CONTENT */
+  .tab-content { display: none; padding: 38px 0 64px; }
+  .tab-content.active { display: block; }
+
+  /* SECTION */
+  .section { margin-bottom: 46px; }
+  .section-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 2px;
+    color: var(--accent); margin-bottom: 18px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .section-title::before { content: '§'; font-size: 16px; }
+  .section-title::after {
+    content: ''; flex: 1;
+    height: 1px; background: var(--border);
+  }
+
+  /* TIP BOX */
+  .tip-box {
+    background: #fff9ec; border: 1px solid var(--gold);
+    border-left: 4px solid var(--gold);
+    padding: 16px 20px; margin-bottom: 18px;
+    font-size: 14px; color: var(--ink); font-family: 'Fraunces', serif;
+  }
+  .tip-box strong { color: var(--accent); }
+
+  /* CODE BLOCKS */
+  pre {
+    background: var(--code-bg);
+    color: var(--code-text);
+    border-radius: 4px;
+    padding: 18px 20px;
+    font-family: 'Space Mono', monospace;
+    font-size: 12.5px;
+    overflow-x: auto;
+    line-height: 1.75;
+    margin-bottom: 16px;
+    border-left: 4px solid var(--accent3);
+  }
+  code { font-family: 'Space Mono', monospace; font-size: 12.5px; }
+  .kw  { color: #ff8a65; }   /* keywords */
+  .ty  { color: #ffca85; }   /* types */
+  .fn  { color: #c5a3ff; }   /* functions */
+  .st  { color: #a8d8c0; }   /* strings */
+  .cm  { color: #74695a; font-style: italic; }  /* comments */
+  .nm  { color: #82c4e8; }   /* numbers */
+
+  /* CARDS */
+  .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+  .card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 8px; padding: 20px;
+    border-top: 3px solid var(--accent3);
+  }
+  .card h3 { font-size: 15px; font-weight: 700; margin-bottom: 8px; color: var(--ink); }
+  .card p, .card li { font-size: 13px; color: var(--muted); line-height: 1.7; }
+  .card code { background: rgba(184,71,46,0.08); color: var(--accent); padding: 1px 5px; border-radius: 3px; }
+  .card ul { padding-left: 16px; }
+
+  /* COLLECTIONS TABLE */
+  .stl-table { width: 100%; border-collapse: collapse; font-size: 13px; background: var(--surface); }
+  .stl-table th {
+    background: var(--ink); color: var(--bg);
+    padding: 11px 14px; text-align: left;
+    font-family: 'Space Mono', monospace;
+    font-size: 10.5px; letter-spacing: 1px; text-transform: uppercase;
+  }
+  .stl-table td { padding: 11px 14px; border-bottom: 1px solid var(--border); }
+  .stl-table tr:hover td { background: rgba(184,71,46,0.03); }
+  .stl-table code {
+    background: rgba(47,111,79,0.08); color: var(--accent2);
+    padding: 2px 6px; border-radius: 3px; font-size: 12px;
+    font-family: 'Space Mono', monospace;
+  }
+
+  /* RESOURCE CARDS */
+  .resource-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
+  .resource-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 8px; padding: 22px; transition: box-shadow 0.2s;
+  }
+  .resource-card:hover { box-shadow: 4px 4px 0 var(--ink); }
+  .resource-card .r-type {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+    padding: 3px 9px; border-radius: 2px; display: inline-block; margin-bottom: 12px;
+  }
+  .free { background: rgba(47,111,79,0.1); color: var(--accent2); border: 1px solid rgba(47,111,79,0.25); }
+  .paid { background: rgba(184,71,46,0.1); color: var(--accent); border: 1px solid rgba(184,71,46,0.25); }
+  .resource-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+  .resource-card p { font-size: 13.5px; color: var(--muted); margin-bottom: 12px; }
+  .resource-card a {
+    display: inline-block; color: var(--accent3); font-size: 12px;
+    text-decoration: none; margin-top: 10px;
+    font-family: 'Space Mono', monospace;
+    border-bottom: 1px solid var(--accent3);
+  }
+
+  /* ROADMAP */
+  .roadmap-step {
+    display: flex; gap: 22px; margin-bottom: 30px;
+    position: relative;
+  }
+  .roadmap-step::before {
+    content: ''; position: absolute;
+    left: 21px; top: 46px; width: 2px;
+    height: calc(100% + 16px);
+    background: var(--border);
+  }
+  .roadmap-step:last-child::before { display: none; }
+  .step-num {
+    flex-shrink: 0; width: 44px; height: 44px;
+    background: var(--ink); color: var(--gold);
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 16px; z-index: 1; font-family: 'Space Mono', monospace;
+  }
+  .step-body { flex: 1; padding-top: 6px; }
+  .step-body h3 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+  .step-body p { font-size: 13.5px; color: var(--muted); }
+  .step-time { font-size: 11px; color: var(--accent); margin-top: 6px; font-family: 'Space Mono', monospace; }
+
+  @media (max-width: 640px) {
+    .hero { padding: 40px 20px; }
+    pre { font-size: 11.5px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="container">
+    <div class="hero-tag">Sticking With Java</div>
+    <h1>Java for <em>DSA</em></h1>
+    <p>The complete Collections Framework, syntax patterns, and curated resources for grinding Data Structures & Algorithms in Java — no detours.</p>
+  </div>
+</div>
+
+<nav class="tab-nav">
+  <div class="container" style="display:flex;padding:0;">
+    <button class="tab-btn active" onclick="showTab('syntax')">Syntax</button>
+    <button class="tab-btn" onclick="showTab('collections')">Collections</button>
+    <button class="tab-btn" onclick="showTab('patterns')">DSA Patterns</button>
+    <button class="tab-btn" onclick="showTab('resources')">Resources</button>
+    <button class="tab-btn" onclick="showTab('roadmap')">Roadmap</button>
+  </div>
+</nav>
+
+<!-- ══════ TAB 1: SYNTAX ══════ -->
+<div id="tab-syntax" class="tab-content active">
+<div class="container">
+
+  <div class="tip-box">
+    <strong>Why stay on Java?</strong> The Collections Framework is mature, the syntax is verbose but predictable, and most interview platforms support it fully. The only real cost is verbosity — Java needs more lines than C++ for the same logic, and you occasionally hit a TLE on the tightest time-limit CP problems. For interviews, this almost never matters.
+  </div>
+
+  <div class="section">
+    <div class="section-title">Boilerplate (LeetCode / Interview Style)</div>
+    <pre><span class="kw">import</span> java.util.*;
+
+<span class="kw">class</span> <span class="ty">Solution</span> {
+    <span class="kw">public</span> <span class="ty">int</span>[] <span class="fn">solve</span>(<span class="ty">int</span>[] nums) {
+        <span class="cm">// your code here</span>
+        <span class="kw">return</span> nums;
+    }
+
+    <span class="cm">// for local testing</span>
+    <span class="kw">public static void</span> <span class="fn">main</span>(<span class="ty">String</span>[] args) {
+        <span class="ty">Solution</span> sol = <span class="kw">new</span> <span class="ty">Solution</span>();
+        <span class="ty">int</span>[] result = sol.<span class="fn">solve</span>(<span class="kw">new</span> <span class="ty">int</span>[]{<span class="nm">1</span>,<span class="nm">2</span>,<span class="nm">3</span>});
+        System.out.<span class="fn">println</span>(Arrays.<span class="fn">toString</span>(result));
+    }
+}</pre>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Fast I/O (Codeforces / Competitive Programming)</div>
+    <pre><span class="kw">import</span> java.io.*;
+<span class="kw">import</span> java.util.*;
+
+<span class="kw">public class</span> <span class="ty">Main</span> {
+    <span class="kw">public static void</span> <span class="fn">main</span>(<span class="ty">String</span>[] args) <span class="kw">throws</span> <span class="ty">IOException</span> {
+        <span class="ty">BufferedReader</span> br = <span class="kw">new</span> <span class="ty">BufferedReader</span>(<span class="kw">new</span> <span class="ty">InputStreamReader</span>(System.in));
+        <span class="ty">StringBuilder</span> sb = <span class="kw">new</span> <span class="ty">StringBuilder</span>();
+
+        <span class="ty">int</span> n = <span class="ty">Integer</span>.<span class="fn">parseInt</span>(br.<span class="fn">readLine</span>().<span class="fn">trim</span>());
+        <span class="ty">StringTokenizer</span> st = <span class="kw">new</span> <span class="ty">StringTokenizer</span>(br.<span class="fn">readLine</span>());
+        <span class="ty">int</span>[] arr = <span class="kw">new</span> <span class="ty">int</span>[n];
+        <span class="kw">for</span> (<span class="ty">int</span> i = <span class="nm">0</span>; i < n; i++) arr[i] = <span class="ty">Integer</span>.<span class="fn">parseInt</span>(st.<span class="fn">nextToken</span>());
+
+        sb.<span class="fn">append</span>(<span class="st">"result\n"</span>);   <span class="cm">// build output, don't print directly each time</span>
+        System.out.<span class="fn">print</span>(sb);
+    }
+}
+<span class="cm">// Scanner is ~10x slower than BufferedReader. Avoid Scanner in CP with large input.</span></pre>
+    <div class="tip-box"><strong>CP consensus:</strong> Use <code>BufferedReader</code> + <code>StringTokenizer</code> for reading, and <code>StringBuilder</code> for output — never call <code>System.out.println</code> in a loop with large output, it's slow.</div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Primitive Types & Wrapper Classes</div>
+    <pre><span class="ty">int</span> x = <span class="nm">5</span>;                <span class="cm">// 32-bit</span>
+<span class="ty">long</span> y = <span class="nm">10000000000L</span>;   <span class="cm">// 64-bit — note the 'L' suffix!</span>
+<span class="ty">double</span> d = <span class="nm">3.14</span>;
+<span class="ty">char</span> c = <span class="st">'A'</span>;
+<span class="ty">boolean</span> flag = <span class="kw">true</span>;
+<span class="ty">String</span> s = <span class="st">"hello"</span>;        <span class="cm">// immutable — use StringBuilder to mutate</span>
+
+<span class="cm">// Autoboxing — needed for generics (collections can't hold primitives directly)</span>
+<span class="ty">Integer</span> boxed = <span class="nm">5</span>;          <span class="cm">// int → Integer automatically</span>
+<span class="ty">List</span>&lt;<span class="ty">Integer</span>&gt; list = <span class="kw">new</span> <span class="ty">ArrayList</span>&lt;&gt;();  <span class="cm">// can't write List&lt;int&gt;</span>
+
+<span class="cm">// Integer/Long overflow trap — same as C++</span>
+<span class="ty">int</span> a = Integer.MAX_VALUE;
+a++;  <span class="cm">// overflows silently → becomes negative! Use long for big sums.</span></pre>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Arrays</div>
+    <pre><span class="ty">int</span>[] arr = <span class="kw">new</span> <span class="ty">int</span>[<span class="nm">5</span>];               <span class="cm">// all zeros by default</span>
+<span class="ty">int</span>[] arr2 = {<span class="nm">1</span>, <span class="nm">2</span>, <span class="nm">3</span>};            <span class="cm">// literal init</span>
+arr.length;                       <span class="cm">// NOT a method! No parentheses.</span>
+
+<span class="cm">// 2D array</span>
+<span class="ty">int</span>[][] grid = <span class="kw">new</span> <span class="ty">int</span>[<span class="nm">3</span>][<span class="nm">4</span>];      <span class="cm">// 3 rows x 4 cols, all 0</span>
+grid[<span class="nm">0</span>][<span class="nm">1</span>] = <span class="nm">5</span>;
+
+<span class="cm">// Utility methods (java.util.Arrays)</span>
+Arrays.<span class="fn">sort</span>(arr);                 <span class="cm">// ascending, in-place</span>
+Arrays.<span class="fn">toString</span>(arr);             <span class="cm">// prints [1, 2, 3]</span>
+Arrays.<span class="fn">fill</span>(arr, -<span class="nm">1</span>);            <span class="cm">// fill all with -1</span>
+Arrays.<span class="fn">copyOf</span>(arr, <span class="nm">10</span>);          <span class="cm">// resize/clone</span>
+Arrays.<span class="fn">asList</span>(<span class="nm">1</span>, <span class="nm">2</span>, <span class="nm">3</span>);        <span class="cm">// fixed-size List view (can't add/remove!)</span>
+
+<span class="cm">// Sorting with custom comparator — Integer[] required, NOT int[]</span>
+<span class="ty">Integer</span>[] boxedArr = {<span class="nm">3</span>, <span class="nm">1</span>, <span class="nm">2</span>};
+Arrays.<span class="fn">sort</span>(boxedArr, (a, b) -> b - a);  <span class="cm">// descending</span></pre>
+    <div class="tip-box"><strong>Common trap:</strong> You <em>cannot</em> pass a comparator to sort a primitive <code>int[]</code> — Java's <code>Arrays.sort</code> only accepts comparators for object arrays. Use <code>Integer[]</code> if you need custom sort order.</div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Strings & StringBuilder</div>
+    <pre><span class="ty">String</span> s = <span class="st">"hello"</span>;
+s.<span class="fn">length</span>();                  <span class="cm">// 5</span>
+s.<span class="fn">charAt</span>(<span class="nm">0</span>);                <span class="cm">// 'h'</span>
+s.<span class="fn">substring</span>(<span class="nm">1</span>, <span class="nm">4</span>);          <span class="cm">// "ell" — end EXCLUSIVE</span>
+s.<span class="fn">indexOf</span>(<span class="st">"ll"</span>);            <span class="cm">// 2, or -1 if not found</span>
+s.<span class="fn">equals</span>(<span class="st">"hello"</span>);         <span class="cm">// use .equals(), NEVER == for content</span>
+s.<span class="fn">toCharArray</span>();             <span class="cm">// char[] for manipulation</span>
+<span class="ty">Integer</span>.<span class="fn">parseInt</span>(<span class="st">"42"</span>);      <span class="cm">// String → int</span>
+<span class="ty">String</span>.<span class="fn">valueOf</span>(<span class="nm">42</span>);          <span class="cm">// int → String</span>
+s.<span class="fn">split</span>(<span class="st">","</span>);                <span class="cm">// String[] — built-in split, unlike C++!</span>
+
+<span class="cm">// Strings are immutable — every concatenation makes a NEW string</span>
+<span class="ty">String</span> bad = <span class="st">""</span>;
+<span class="kw">for</span> (<span class="ty">int</span> i = <span class="nm">0</span>; i < n; i++) bad += i;  <span class="cm">// O(n²) — DON'T do this in loops!</span>
+
+<span class="cm">// Use StringBuilder for mutation — this is your mutable string equivalent</span>
+<span class="ty">StringBuilder</span> sb = <span class="kw">new</span> <span class="ty">StringBuilder</span>();
+sb.<span class="fn">append</span>(<span class="st">"hello"</span>);
+sb.<span class="fn">reverse</span>();
+sb.<span class="fn">deleteCharAt</span>(<span class="nm">0</span>);
+sb.<span class="fn">toString</span>();                <span class="cm">// convert back to String when done</span></pre>
+  </div>
+
+  <div class="section">
+    <div class="section-title">The <code>==</code> vs <code>.equals()</code> Trap</div>
+    <pre><span class="ty">String</span> a = <span class="kw">new</span> <span class="ty">String</span>(<span class="st">"hi"</span>);
+<span class="ty">String</span> b = <span class="kw">new</span> <span class="ty">String</span>(<span class="st">"hi"</span>);
+
+a == b;          <span class="cm">// false — compares MEMORY ADDRESS, not content</span>
+a.<span class="fn">equals</span>(b);    <span class="cm">// true  — compares actual CONTENT</span>
+
+<span class="cm">// Same trap applies to Integer objects outside the -128..127 cache range</span>
+<span class="ty">Integer</span> x = <span class="nm">200</span>, y = <span class="nm">200</span>;
+x == y;          <span class="cm">// false! (outside cached range)</span>
+x.<span class="fn">equals</span>(y);    <span class="cm">// true</span>
+
+<span class="ty">Integer</span> p = <span class="nm">100</span>, q = <span class="nm">100</span>;
+p == q;          <span class="cm">// true (cached -128 to 127, same object reused)</span></pre>
+    <div class="tip-box"><strong>Rule:</strong> Always use <code>.equals()</code> for Strings and boxed types (<code>Integer</code>, <code>Long</code>, etc). Only use <code>==</code> for primitives (<code>int</code>, <code>char</code>, <code>boolean</code>).</div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Lambdas & Comparators</div>
+    <pre><span class="cm">// Functional interface — used everywhere for custom sorting</span>
+<span class="ty">List</span>&lt;<span class="ty">Integer</span>&gt; list = <span class="kw">new</span> <span class="ty">ArrayList</span>&lt;&gt;(List.<span class="fn">of</span>(<span class="nm">3</span>,<span class="nm">1</span>,<span class="nm">4</span>));
+list.<span class="fn">sort</span>((a, b) -> a - b);          <span class="cm">// ascending</span>
+list.<span class="fn">sort</span>((a, b) -> b - a);          <span class="cm">// descending</span>
+
+<span class="cm">// More readable with Comparator static methods</span>
+list.<span class="fn">sort</span>(Comparator.<span class="fn">naturalOrder</span>());
+list.<span class="fn">sort</span>(Comparator.<span class="fn">reverseOrder</span>());
+
+<span class="cm">// Sort array of pairs (e.g., int[][] edges) by 2nd element</span>
+<span class="ty">int</span>[][] edges = {{<span class="nm">1</span>,<span class="nm">5</span>}, {<span class="nm">2</span>,<span class="nm">3</span>}};
+Arrays.<span class="fn">sort</span>(edges, (a, b) -> a[<span class="nm">1</span>] - b[<span class="nm">1</span>]);
+
+<span class="cm">// Multi-level sort: by length, then alphabetically</span>
+<span class="ty">List</span>&lt;<span class="ty">String</span>&gt; words = ...;
+words.<span class="fn">sort</span>(Comparator.<span class="fn">comparingInt</span>(<span class="ty">String</span>::length).<span class="fn">thenComparing</span>(s -> s));</pre>
+    <div class="tip-box"><strong>Watch for integer overflow:</strong> <code>(a - b)</code> can overflow for very large/small ints. Prefer <code>Integer.compare(a, b)</code> in sort comparators to be safe.</div>
+  </div>
+
+</div>
+</div>
+
+<!-- ══════ TAB 2: COLLECTIONS ══════ -->
+<div id="tab-collections" class="tab-content">
+<div class="container">
+  <div class="tip-box"><strong>This is your STL.</strong> The Java Collections Framework is a must for any developer preparing for technical interviews — master these and you can solve nearly every DSA problem.</div>
+
+  <div class="section">
+    <div class="section-title">Collection Quick Reference</div>
+    <table class="stl-table">
+      <tr>
+        <th>Java Type</th>
+        <th>Backed By</th>
+        <th>Use Case</th>
+        <th>Key Methods</th>
+      </tr>
+      <tr>
+        <td><code>ArrayList&lt;T&gt;</code></td>
+        <td>Resizable array</td>
+        <td>Dynamic list, fast random access</td>
+        <td><code>add, get, set, remove, size</code></td>
+      </tr>
+      <tr>
+        <td><code>ArrayDeque&lt;T&gt;</code></td>
+        <td>Resizable array</td>
+        <td>Stack AND queue (preferred over both)</td>
+        <td><code>push, pop, offer, poll, peek</code></td>
+      </tr>
+      <tr>
+        <td><code>LinkedList&lt;T&gt;</code></td>
+        <td>Doubly linked list</td>
+        <td>Queue, frequent insert/delete</td>
+        <td><code>add, poll, offer, peek</code></td>
+      </tr>
+      <tr>
+        <td><code>PriorityQueue&lt;T&gt;</code></td>
+        <td>Binary heap</td>
+        <td>Dijkstra, K-th largest, heaps</td>
+        <td><code>offer, poll, peek</code></td>
+      </tr>
+      <tr>
+        <td><code>HashSet&lt;T&gt;</code></td>
+        <td>HashMap internally</td>
+        <td>Fast lookup, visited tracking</td>
+        <td><code>add, remove, contains</code> — O(1)</td>
+      </tr>
+      <tr>
+        <td><code>TreeSet&lt;T&gt;</code></td>
+        <td>Red-Black Tree</td>
+        <td>Sorted unique elements, range queries</td>
+        <td><code>add, ceiling, floor, first, last</code></td>
+      </tr>
+      <tr>
+        <td><code>HashMap&lt;K,V&gt;</code></td>
+        <td>Hash table</td>
+        <td>Frequency count, memoization</td>
+        <td><code>put, get, getOrDefault, containsKey</code></td>
+      </tr>
+      <tr>
+        <td><code>TreeMap&lt;K,V&gt;</code></td>
+        <td>Red-Black Tree</td>
+        <td>Key-value pairs sorted in a specific order</td>
+        <td><code>put, get, firstKey, ceilingKey</code></td>
+      </tr>
+      <tr>
+        <td><code>LinkedHashMap&lt;K,V&gt;</code></td>
+        <td>Hash table + linked list</td>
+        <td>Maintains insertion order</td>
+        <td>Same as HashMap, but ordered</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-title">ArrayList Examples</div>
+    <pre><span class="ty">List</span>&lt;<span class="ty">Integer</span>&gt; list = <span class="kw">new</span> <span class="ty">ArrayList</span>&lt;&gt;();
+list.<span class="fn">add</span>(<span class="nm">10</span>);
+list.<span class="fn">add</span>(<span class="nm">0</span>, <span class="nm">5</span>);              <span class="cm">// insert at index 0</span>
+list.<span class="fn">get</span>(<span class="nm">0</span>);                 <span class="cm">// 5</span>
+list.<span class="fn">set</span>(<span class="nm">0</span>, <span class="nm">99</span>);             <span class="cm">// overwrite index 0</span>
+list.<span class="fn">remove</span>(<span class="ty">Integer</span>.<span class="fn">valueOf</span>(<span class="nm">99</span>)); <span class="cm">// remove BY VALUE</span>
+list.<span class="fn">remove</span>(<span class="nm">0</span>);              <span class="cm">// remove BY INDEX — overload trap!</span>
+list.<span class="fn">contains</span>(<span class="nm">10</span>);
+Collections.<span class="fn">sort</span>(list);
+Collections.<span class="fn">reverse</span>(list);
+
+<span class="cm">// 2D List (most common in grid/graph problems)</span>
+<span class="ty">List</span>&lt;<span class="ty">List</span>&lt;<span class="ty">Integer</span>&gt;&gt; grid = <span class="kw">new</span> <span class="ty">ArrayList</span>&lt;&gt;();
+<span class="kw">for</span> (<span class="ty">int</span> i = <span class="nm">0</span>; i < 3; i++) grid.<span class="fn">add</span>(<span class="kw">new</span> <span class="ty">ArrayList</span>&lt;&gt;());</pre>
+    <div class="tip-box"><strong>Trap:</strong> <code>list.remove(5)</code> removes the element <em>at index 5</em>, not the value 5. To remove by value with an <code>Integer</code> list, box it: <code>list.remove(Integer.valueOf(5))</code>.</div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">ArrayDeque — Stack & Queue (Use This, Not <code>Stack</code>)</div>
+    <pre><span class="cm">// As a STACK (LIFO)</span>
+<span class="ty">Deque</span>&lt;<span class="ty">Integer</span>&gt; stack = <span class="kw">new</span> <span class="ty">ArrayDeque</span>&lt;&gt;();
+stack.<span class="fn">push</span>(<span class="nm">1</span>);
+stack.<span class="fn">push</span>(<span class="nm">2</span>);
+stack.<span class="fn">pop</span>();             <span class="cm">// removes & returns 2 (top)</span>
+stack.<span class="fn">peek</span>();            <span class="cm">// look at top without removing</span>
+
+<span class="cm">// As a QUEUE (FIFO)</span>
+<span class="ty">Deque</span>&lt;<span class="ty">Integer</span>&gt; queue = <span class="kw">new</span> <span class="ty">ArrayDeque</span>&lt;&gt;();
+queue.<span class="fn">offer</span>(<span class="nm">1</span>);            <span class="cm">// add to back</span>
+queue.<span class="fn">offer</span>(<span class="nm">2</span>);
+queue.<span class="fn">poll</span>();             <span class="cm">// removes & returns 1 (front)</span>
+
+<span class="cm">// As a DEQUE (both ends — for sliding window problems)</span>
+<span class="ty">Deque</span>&lt;<span class="ty">Integer</span>&gt; dq = <span class="kw">new</span> <span class="ty">ArrayDeque</span>&lt;&gt;();
+dq.<span class="fn">addFirst</span>(<span class="nm">1</span>); dq.<span class="fn">addLast</span>(<span class="nm">2</span>);
+dq.<span class="fn">pollFirst</span>(); dq.<span class="fn">pollLast</span>();</pre>
+    <div class="tip-box">Stack extends Vector with synchronization overhead — prefer ArrayDeque for better single-threaded performance in modern code. Don't use the old <code>Stack</code> class.</div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">PriorityQueue (Heap)</div>
+    <pre><span class="cm">// Min-heap (default)</span>
+<span class="ty">PriorityQueue</span>&lt;<span class="ty">Integer</span>&gt; minPQ = <span class="kw">new</span> <span class="ty">PriorityQueue</span>&lt;&gt;();
+minPQ.<span class="fn">offer</span>(<span class="nm">5</span>);
+minPQ.<span class="fn">offer</span>(<span class="nm">1</span>);
+minPQ.<span class="fn">poll</span>();          <span class="cm">// 1 (smallest) — priority queue is a min-heap by default</span>
+
+<span class="cm">// Max-heap — flip with reverseOrder</span>
+<span class="ty">PriorityQueue</span>&lt;<span class="ty">Integer</span>&gt; maxPQ = <span class="kw">new</span> <span class="ty">PriorityQueue</span>&lt;&gt;(<span class="ty">Collections</span>.<span class="fn">reverseOrder</span>());
+
+<span class="cm">// Custom comparator — min-heap of pairs (dist, node), Dijkstra pattern</span>
+<span class="ty">PriorityQueue</span>&lt;<span class="ty">int</span>[]&gt; pq = <span class="kw">new</span> <span class="ty">PriorityQueue</span>&lt;&gt;((a, b) -> a[<span class="nm">0</span>] - b[<span class="nm">0</span>]);
+pq.<span class="fn">offer</span>(<span class="kw">new</span> <span class="ty">int</span>[]{<span class="nm">0</span>, src});  <span class="cm">// {distance, node}</span></pre>
+    <div class="tip-box"><strong>Heads up:</strong> PriorityQueue doesn't support direct indexing or efficient random removal, and iteration order is undefined — only <code>peek()</code>/<code>poll()</code> guarantee the min/max element.</div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">HashMap Examples</div>
+    <pre><span class="ty">Map</span>&lt;<span class="ty">String</span>, <span class="ty">Integer</span>&gt; freq = <span class="kw">new</span> <span class="ty">HashMap</span>&lt;&gt;();
+
+<span class="cm">// Count frequencies — the most common DSA pattern</span>
+<span class="kw">for</span> (<span class="ty">String</span> w : words) {
+    freq.<span class="fn">put</span>(w, freq.<span class="fn">getOrDefault</span>(w, <span class="nm">0</span>) + <span class="nm">1</span>);
+}
+
+<span class="cm">// Even shorter with merge</span>
+freq.<span class="fn">merge</span>(w, <span class="nm">1</span>, <span class="ty">Integer</span>::sum);
+
+<span class="cm">// Check existence</span>
+<span class="kw">if</span> (freq.<span class="fn">containsKey</span>(<span class="st">"apple"</span>)) { ... }
+
+<span class="cm">// Iterate over entries</span>
+<span class="kw">for</span> (<span class="ty">Map</span>.<span class="ty">Entry</span>&lt;<span class="ty">String</span>, <span class="ty">Integer</span>&gt; entry : freq.<span class="fn">entrySet</span>()) {
+    System.out.<span class="fn">println</span>(entry.<span class="fn">getKey</span>() + <span class="st">": "</span> + entry.<span class="fn">getValue</span>());
+}
+
+<span class="cm">// computeIfAbsent — for grouping into lists (graph adjacency, anagram groups)</span>
+<span class="ty">Map</span>&lt;<span class="ty">Integer</span>, <span class="ty">List</span>&lt;<span class="ty">Integer</span>&gt;&gt; adj = <span class="kw">new</span> <span class="ty">HashMap</span>&lt;&gt;();
+adj.<span class="fn">computeIfAbsent</span>(u, k -> <span class="kw">new</span> <span class="ty">ArrayList</span>&lt;&gt;()).<span class="fn">add</span>(v);</pre>
+  </div>
+
+  <div class="section">
+    <div class="section-title">TreeMap / TreeSet (Sorted Structures)</div>
+    <pre><span class="ty">TreeSet</span>&lt;<span class="ty">Integer</span>&gt; ts = <span class="kw">new</span> <span class="ty">TreeSet</span>&lt;&gt;(List.<span class="fn">of</span>(<span class="nm">5</span>, <span class="nm">1</span>, <span class="nm">3</span>));
+ts.<span class="fn">first</span>();             <span class="cm">// smallest</span>
+ts.<span class="fn">last</span>();              <span class="cm">// largest</span>
+ts.<span class="fn">ceiling</span>(<span class="nm">2</span>);          <span class="cm">// smallest element >= 2</span>
+ts.<span class="fn">floor</span>(<span class="nm">2</span>);            <span class="cm">// largest element <= 2</span>
+ts.<span class="fn">higher</span>(<span class="nm">3</span>);           <span class="cm">// strictly greater than 3</span>
+ts.<span class="fn">lower</span>(<span class="nm">3</span>);            <span class="cm">// strictly less than 3</span>
+
+<span class="ty">TreeMap</span>&lt;<span class="ty">Integer</span>, <span class="ty">String</span>&gt; tm = <span class="kw">new</span> <span class="ty">TreeMap</span>&lt;&gt;();
+tm.<span class="fn">firstKey</span>(); tm.<span class="fn">lastKey</span>();
+tm.<span class="fn">ceilingKey</span>(<span class="nm">5</span>); tm.<span class="fn">floorKey</span>(<span class="nm">5</span>);</pre>
+    <div class="tip-box">Java has no built-in <code>multiset</code>. Simulate it with <code>TreeMap&lt;Integer, Integer&gt;</code> (value → count) when you need a sorted structure with duplicates.</div>
+  </div>
+
+</div>
+</div>
+
+<!-- ══════ TAB 3: PATTERNS ══════ -->
+<div id="tab-patterns" class="tab-content">
+<div class="container">
+
+  <div class="section">
+    <div class="section-title">Linked List Node</div>
+    <pre><span class="kw">class</span> <span class="ty">ListNode</span> {
+    <span class="ty">int</span> val;
+    <span class="ty">ListNode</span> next;
+    <span class="ty">ListNode</span>(<span class="ty">int</span> val) { <span class="kw">this</span>.val = val; }
+    <span class="ty">ListNode</span>(<span class="ty">int</span> val, <span class="ty">ListNode</span> next) { <span class="kw">this</span>.val = val; <span class="kw">this</span>.next = next; }
+}
+
+<span class="cm">// Traversal</span>
+<span class="ty">ListNode</span> cur = head;
+<span class="kw">while</span> (cur != <span class="kw">null</span>) {
+    System.out.<span class="fn">print</span>(cur.val + <span class="st">" "</span>);
+    cur = cur.next;
+}</pre>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Binary Tree Node + Traversals</div>
+    <pre><span class="kw">class</span> <span class="ty">TreeNode</span> {
+    <span class="ty">int</span> val;
+    <span class="ty">TreeNode</span> left, right;
+    <span class="ty">TreeNode</span>(<span class="ty">int</span> val) { <span class="kw">this</span>.val = val; }
+}
+
+<span class="cm">// Recursive inorder</span>
+<span class="kw">void</span> <span class="fn">inorder</span>(<span class="ty">TreeNode</span> root, <span class="ty">List</span>&lt;<span class="ty">Integer</span>&gt; result) {
+    <span class="kw">if</span> (root == <span class="kw">null</span>) <span class="kw">return</span>;
+    <span class="fn">inorder</span>(root.left, result);
+    result.<span class="fn">add</span>(root.val);
+    <span class="fn">inorder</span>(root.right, result);
+}
+
+<span class="cm">// BFS / Level order — uses ArrayDeque as queue</span>
+<span class="ty">Deque</span>&lt;<span class="ty">TreeNode</span>&gt; q = <span class="kw">new</span> <span class="ty">ArrayDeque</span>&lt;&gt;();
+q.<span class="fn">offer</span>(root);
+<span class="kw">while</span> (!q.<span class="fn">isEmpty</span>()) {
+    <span class="ty">TreeNode</span> node = q.<span class="fn">poll</span>();
+    System.out.<span class="fn">print</span>(node.val + <span class="st">" "</span>);
+    <span class="kw">if</span> (node.left != <span class="kw">null</span>)  q.<span class="fn">offer</span>(node.left);
+    <span class="kw">if</span> (node.right != <span class="kw">null</span>) q.<span class="fn">offer</span>(node.right);
+}</pre>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Graph (Adjacency List)</div>
+    <pre><span class="ty">int</span> n = <span class="nm">5</span>;
+<span class="ty">List</span>&lt;<span class="ty">List</span>&lt;<span class="ty">Integer</span>&gt;&gt; adj = <span class="kw">new</span> <span class="ty">ArrayList</span>&lt;&gt;();
+<span class="kw">for</span> (<span class="ty">int</span> i = <span class="nm">0</span>; i <= n; i++) adj.<span class="fn">add</span>(<span class="kw">new</span> <span class="ty">ArrayList</span>&lt;&gt;());
+adj.<span class="fn">get</span>(<span class="nm">1</span>).<span class="fn">add</span>(<span class="nm">2</span>);    <span class="cm">// edge 1 → 2</span>
+adj.<span class="fn">get</span>(<span class="nm">2</span>).<span class="fn">add</span>(<span class="nm">1</span>);    <span class="cm">// undirected</span>
+
+<span class="cm">// Weighted graph — List of int[] {neighbor, weight}</span>
+<span class="ty">List</span>&lt;<span class="ty">List</span>&lt;<span class="ty">int</span>[]&gt;&gt; wadj = <span class="kw">new</span> <span class="ty">ArrayList</span>&lt;&gt;();
+
+<span class="cm">// BFS</span>
+<span class="ty">boolean</span>[] visited = <span class="kw">new</span> <span class="ty">boolean</span>[n + <span class="nm">1</span>];
+<span class="ty">Deque</span>&lt;<span class="ty">Integer</span>&gt; queue = <span class="kw">new</span> <span class="ty">ArrayDeque</span>&lt;&gt;();
+queue.<span class="fn">offer</span>(<span class="nm">1</span>); visited[<span class="nm">1</span>] = <span class="kw">true</span>;
+<span class="kw">while</span> (!queue.<span class="fn">isEmpty</span>()) {
+    <span class="ty">int</span> u = queue.<span class="fn">poll</span>();
+    <span class="kw">for</span> (<span class="ty">int</span> v : adj.<span class="fn">get</span>(u)) {
+        <span class="kw">if</span> (!visited[v]) { visited[v] = <span class="kw">true</span>; queue.<span class="fn">offer</span>(v); }
+    }
+}
+
+<span class="cm">// DFS (recursive)</span>
+<span class="kw">void</span> <span class="fn">dfs</span>(<span class="ty">int</span> u, <span class="ty">List</span>&lt;<span class="ty">List</span>&lt;<span class="ty">Integer</span>&gt;&gt; adj, <span class="ty">boolean</span>[] visited) {
+    visited[u] = <span class="kw">true</span>;
+    <span class="kw">for</span> (<span class="ty">int</span> v : adj.<span class="fn">get</span>(u))
+        <span class="kw">if</span> (!visited[v]) <span class="fn">dfs</span>(v, adj, visited);
+}</pre>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Dynamic Programming Template</div>
+    <pre><span class="cm">// 1D DP with memoization — Fibonacci</span>
+<span class="ty">int</span>[] dp;
+<span class="ty">int</span> <span class="fn">fib</span>(<span class="ty">int</span> n) {
+    <span class="kw">if</span> (n <= <span class="nm">1</span>) <span class="kw">return</span> n;
+    <span class="kw">if</span> (dp[n] != -<span class="nm">1</span>) <span class="kw">return</span> dp[n];
+    <span class="kw">return</span> dp[n] = <span class="fn">fib</span>(n - <span class="nm">1</span>) + <span class="fn">fib</span>(n - <span class="nm">2</span>);
+}
+<span class="cm">// init: dp = new int[n+1]; Arrays.fill(dp, -1);</span>
+
+<span class="cm">// 2D DP — Knapsack / LCS pattern</span>
+<span class="ty">int</span>[][] dp = <span class="kw">new</span> <span class="ty">int</span>[m + <span class="nm">1</span>][n + <span class="nm">1</span>];   <span class="cm">// auto-initialized to 0</span>
+
+<span class="cm">// Prefix sum</span>
+<span class="ty">int</span>[] prefix = <span class="kw">new</span> <span class="ty">int</span>[n + <span class="nm">1</span>];
+<span class="kw">for</span> (<span class="ty">int</span> i = <span class="nm">0</span>; i < n; i++) prefix[i + <span class="nm">1</span>] = prefix[i] + arr[i];
+<span class="ty">int</span> rangeSum = prefix[r + <span class="nm">1</span>] - prefix[l];</pre>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Sliding Window</div>
+    <pre><span class="cm">// Variable window (two pointers) — most common interview pattern</span>
+<span class="ty">int</span> l = <span class="nm">0</span>, ans = <span class="nm">0</span>;
+<span class="ty">Map</span>&lt;<span class="ty">Integer</span>, <span class="ty">Integer</span>&gt; freq = <span class="kw">new</span> <span class="ty">HashMap</span>&lt;&gt;();
+
+<span class="kw">for</span> (<span class="ty">int</span> r = <span class="nm">0</span>; r < arr.length; r++) {
+    freq.<span class="fn">merge</span>(arr[r], <span class="nm">1</span>, <span class="ty">Integer</span>::sum);
+    <span class="kw">while</span> (freq.<span class="fn">size</span>() > k) {   <span class="cm">// shrink window</span>
+        freq.<span class="fn">put</span>(arr[l], freq.<span class="fn">get</span>(arr[l]) - <span class="nm">1</span>);
+        <span class="kw">if</span> (freq.<span class="fn">get</span>(arr[l]) == <span class="nm">0</span>) freq.<span class="fn">remove</span>(arr[l]);
+        l++;
+    }
+    ans = Math.<span class="fn">max</span>(ans, r - l + <span class="nm">1</span>);
+}</pre>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Binary Search Template</div>
+    <pre><span class="ty">int</span> lo = <span class="nm">0</span>, hi = arr.length - <span class="nm">1</span>, ans = -<span class="nm">1</span>;
+<span class="kw">while</span> (lo <= hi) {
+    <span class="ty">int</span> mid = lo + (hi - lo) / <span class="nm">2</span>;   <span class="cm">// avoids overflow</span>
+    <span class="kw">if</span> (arr[mid] == target) { ans = mid; <span class="kw">break</span>; }
+    <span class="kw">else if</span> (arr[mid] < target) lo = mid + <span class="nm">1</span>;
+    <span class="kw">else</span> hi = mid - <span class="nm">1</span>;
+}
+
+<span class="cm">// Java's built-in binary search (returns index, or -(insertion point) - 1 if absent)</span>
+<span class="ty">int</span> idx = Arrays.<span class="fn">binarySearch</span>(arr, target);</pre>
+  </div>
+
+</div>
+</div>
+
+<!-- ══════ TAB 4: RESOURCES ══════ -->
+<div id="tab-resources" class="tab-content">
+<div class="container">
+
+  <div class="tip-box">
+    <strong>Sticking with Java is a perfectly fine choice</strong> for interview-focused DSA — most companies accept any language, and Java's verbosity is a non-issue outside of the tightest competitive programming time limits.
+  </div>
+
+  <div class="section">
+    <div class="section-title">Java Syntax & Collections Reference</div>
+    <div class="resource-grid">
+      <div class="resource-card">
+        <span class="r-type free">FREE</span>
+        <h3>Official Java Collections Tutorial (Oracle)</h3>
+        <p>The authoritative source for how every collection actually works internally. Use it like cppreference — the place you go when you need ground truth, not opinion.</p>
+        <a href="https://docs.oracle.com/javase/tutorial/collections/" target="_blank">→ docs.oracle.com</a>
+      </div>
+      <div class="resource-card">
+        <span class="r-type free">FREE</span>
+        <h3>Java Collections Cheat Sheet (javaconceptoftheday)</h3>
+        <p>A dense, practical comparison of every List/Set/Map/Queue implementation — when to use which, and the exact methods you'll reach for. Great as a bookmark-and-revisit page.</p>
+        <a href="https://javaconceptoftheday.com/java-collections-cheat-sheet/" target="_blank">→ javaconceptoftheday.com</a>
+      </div>
+      <div class="resource-card">
+        <span class="r-type free">FREE</span>
+        <h3>TakeUForward (Striver) — A2Z Sheet</h3>
+        <p>Striver's A2Z DSA sheet has problem explanations that work in any language; many community forks provide full Java solutions alongside the C++ originals.</p>
+        <a href="https://takeuforward.org" target="_blank">→ takeuforward.org</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">DSA Practice</div>
+    <div class="resource-grid">
+      <div class="resource-card">
+        <span class="r-type free">FREE</span>
+        <h3>LeetCode (Java)</h3>
+        <p>The default platform for interview-style DSA. Discussion tabs are full of Java-specific solutions and edge-case gotchas — read them after solving, not before.</p>
+        <a href="https://leetcode.com" target="_blank">→ leetcode.com</a>
+      </div>
+      <div class="resource-card">
+        <span class="r-type free">FREE</span>
+        <h3>NeetCode 150 / Blind 75</h3>
+        <p>Curated problem lists covering every core pattern (two pointers, sliding window, DP, graphs). Widely recommended as the most efficient problem set for interview prep — language agnostic, works great in Java.</p>
+        <a href="https://neetcode.io" target="_blank">→ neetcode.io</a>
+      </div>
+      <div class="resource-card">
+        <span class="r-type free">FREE</span>
+        <h3>Striver's A2Z DSA Sheet</h3>
+        <p>455 carefully curated steps, each linked to a video and problem — solve them in Java instead of the original C++; the logic and approach transfer one-to-one.</p>
+        <a href="https://takeuforward.org/strivers-a2z-dsa-course" target="_blank">→ A2Z Sheet</a>
+      </div>
+      <div class="resource-card">
+        <span class="r-type free">FREE</span>
+        <h3>GeeksforGeeks DSA (Java)</h3>
+        <p>Good for concept explanations and Java-first implementations of classic algorithms (Dijkstra, segment trees, tries). More verbose than Striver but solid for filling gaps.</p>
+        <a href="https://www.geeksforgeeks.org/dsa-tutorial-learn-data-structures-and-algorithms/" target="_blank">→ geeksforgeeks.org</a>
+      </div>
+      <div class="resource-card">
+        <span class="r-type free">FREE</span>
+        <h3>CSES Problem Set</h3>
+        <p>~300 problems organized by topic with no fluff. Originally aimed at C++ but works perfectly in Java — input parsing speed is the only adjustment (use BufferedReader).</p>
+        <a href="https://cses.fi/problemset" target="_blank">→ cses.fi/problemset</a>
+      </div>
+      <div class="resource-card">
+        <span class="r-type paid">PAID / FREE TIER</span>
+        <h3>Love Babbar — DSA Course (CodeHelp)</h3>
+        <p>Popular for Indian placement prep, originally in C++ but the concepts map directly — many learners follow it while writing solutions in Java.</p>
+        <a href="https://www.codehelp.in" target="_blank">→ codehelp.in</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Books</div>
+    <div class="resource-grid">
+      <div class="resource-card">
+        <span class="r-type paid">BOOK</span>
+        <h3>Cracking the Coding Interview — Gayle McDowell</h3>
+        <p>The classic interview-prep book. All code examples are in Java, making it a natural fit if you're staying in the Java ecosystem. Covers patterns, not just problems.</p>
+      </div>
+      <div class="resource-card">
+        <span class="r-type paid">BOOK</span>
+        <h3>Effective Java — Joshua Bloch</h3>
+        <p>Not DSA-specific, but the best book for understanding Java idioms deeply — how equals/hashCode actually work, when to use which collection, and common pitfalls. Worth it once you're past the basics.</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- ══════ TAB 5: ROADMAP ══════ -->
+<div id="tab-roadmap" class="tab-content">
+<div class="container">
+
+  <div class="tip-box">
+    <strong>Your advantage:</strong> You're not switching languages, so there's no transition cost. Spend zero time on syntax-hopping — just go straight at the patterns and the Collections Framework details you haven't used yet (TreeMap, ArrayDeque, computeIfAbsent).
+  </div>
+
+  <div class="section">
+    <div class="section-title">Your DSA Grind Plan</div>
+
+    <div class="roadmap-step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h3>Collections Framework Audit</h3>
+        <p>Go through this guide's Collections tab. If you've never used ArrayDeque, TreeMap, or PriorityQueue with a custom comparator, write 5 throwaway snippets for each until the syntax is automatic.</p>
+        <div class="step-time">⏱ 3–4 days</div>
+      </div>
+    </div>
+
+    <div class="roadmap-step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h3>Arrays & Two Pointers</h3>
+        <p>Start with NeetCode 150 or Blind 75's array section. Nail sliding window and two-pointer patterns — these show up constantly and Java's syntax for them is clean.</p>
+        <div class="step-time">⏱ 1 week</div>
+      </div>
+    </div>
+
+    <div class="roadmap-step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <h3>HashMap-Heavy Problems</h3>
+        <p>Frequency counting, grouping anagrams, two-sum variants. Get comfortable with <code>getOrDefault</code>, <code>merge</code>, and <code>computeIfAbsent</code> — they replace a lot of boilerplate.</p>
+        <div class="step-time">⏱ 1 week</div>
+      </div>
+    </div>
+
+    <div class="roadmap-step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <h3>Linked Lists, Trees, Recursion</h3>
+        <p>Practice writing TreeNode/ListNode classes from memory. Recursive DFS and traversals should become second nature — Java's null checks here are the main gotcha vs other languages.</p>
+        <div class="step-time">⏱ 2 weeks</div>
+      </div>
+    </div>
+
+    <div class="roadmap-step">
+      <div class="step-num">5</div>
+      <div class="step-body">
+        <h3>Graphs (BFS/DFS, Dijkstra)</h3>
+        <p>Build the adjacency list pattern until it's automatic. Implement Dijkstra with a PriorityQueue of int[] pairs — this exact pattern reappears in many "shortest path" problems.</p>
+        <div class="step-time">⏱ 2 weeks</div>
+      </div>
+    </div>
+
+    <div class="roadmap-step">
+      <div class="step-num">6</div>
+      <div class="step-body">
+        <h3>Dynamic Programming</h3>
+        <p>Start with 1D DP (climbing stairs, house robber), move to 2D (LCS, edit distance, knapsack). Write both memoized recursive and bottom-up tabulated versions for each.</p>
+        <div class="step-time">⏱ 3 weeks</div>
+      </div>
+    </div>
+
+    <div class="roadmap-step">
+      <div class="step-num">7</div>
+      <div class="step-body">
+        <h3>Mock Interviews & Mixed Practice</h3>
+        <p>Once patterns feel familiar, do timed mixed-topic sets. Focus on explaining your approach out loud — interviewers care as much about communication as correctness.</p>
+        <div class="step-time">⏱ Ongoing</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="section">
+    <div class="section-title">Common Java DSA Mistakes to Avoid</div>
+    <div class="card-grid">
+      <div class="card">
+        <h3>Using <code>==</code> for String/Integer comparison</h3>
+        <p>Always use <code>.equals()</code> for objects. <code>==</code> compares references, not values — a classic bug that silently passes small test cases and fails larger ones.</p>
+      </div>
+      <div class="card">
+        <h3>String concatenation in loops</h3>
+        <p>Strings are immutable — every <code>+=</code> inside a loop creates a new object, turning an O(n) operation into O(n²). Use <code>StringBuilder</code> instead.</p>
+      </div>
+      <div class="card">
+        <h3>Forgetting int overflow</h3>
+        <p>Java's <code>int</code> is 32-bit just like C++. Sums of large arrays or products can silently overflow — switch to <code>long</code> when constraints suggest values beyond ~2×10⁹.</p>
+      </div>
+      <div class="card">
+        <h3>Scanner in competitive programming</h3>
+        <p>Scanner is convenient but slow on large inputs. For CP-style problems with big input sizes, use <code>BufferedReader</code> + <code>StringTokenizer</code> instead.</p>
+      </div>
+      <div class="card">
+        <h3>list.remove(int) ambiguity</h3>
+        <p>On a <code>List&lt;Integer&gt;</code>, <code>remove(5)</code> removes by index, not value. To remove the value 5, write <code>remove(Integer.valueOf(5))</code>.</p>
+      </div>
+      <div class="card">
+        <h3>Modifying a list while iterating</h3>
+        <p>Using a for-each loop and calling <code>list.remove()</code> inside it throws <code>ConcurrentModificationException</code>. Use an explicit <code>Iterator</code> with <code>it.remove()</code>, or iterate backwards by index.</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<script>
+function showTab(name) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>
+</body>
+</html>
